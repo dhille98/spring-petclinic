@@ -1,0 +1,17 @@
+pipeline {
+    agent { label 'JAVA'}
+
+    stages {
+        stage( 'git' ){
+            steps{
+                git ' https://github.com/dhille98/spring-petclinic.git '  'dev'
+            }
+        }
+        stage('build'){
+            steps{
+                sh 'mvn clean package'
+            }
+        }
+
+    }
+}
