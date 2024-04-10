@@ -1,17 +1,12 @@
-pipeline {
+pipeline{
     agent { label 'JDK-17'}
     triggers {
-       pollSCM ('* * * * *')
+        pollSCM('* * * * *')
+        
     }
-    parameters { 
-        choice(name: 'MAVEN-GOALS', 
-        choices: ['complie', 'package', 'clean package'],
-         description: 'this choice for maven goals') 
-         }
-
+    parameters { choice(name: 'MAVEN_GOALS', choices: ['package', 'clean package', 'compile'], description: 'maven goals') }
     
-
-    stages {
+    stages{
         stage( 'git' ) {
             steps{
                 git url :' https://github.com/dhille98/spring-petclinic.git ',
@@ -19,12 +14,13 @@ pipeline {
             }
         }
         stage('build') {
-            steps{
-                sh " mvn ${params.MAVEN-GOALS} "
+            steps {
+                sh "mvn ${params.MAVEN_GOALS}"
                 archiveArtifacts artifacts: '**/spring-petclinic-*.jar'
                 junit testResults: '**/TEST-*.xml'
             }
+            
+            
         }
-
-}
+    }
 }
