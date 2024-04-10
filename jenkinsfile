@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'JDK-17'}
     triggers {
-        ('* * * * *')
+       pollSCM ('* * * * *')
     }
     parameters { 
         choice(name: 'MAVEN-GOALS', 
