@@ -1,6 +1,15 @@
 pipeline {
     agent { label 'JDK-17'}
+    triggers {
+        ('* * * * *')
+    }
+    parameters { 
+        choice(name: 'MAVEN-GOALS', 
+        choices: ['complie', 'package', 'clean package'],
+         description: 'this choice for maven goals') 
+         }
 
+    }
 
     stages {
         stage( 'git' ){
@@ -11,7 +20,7 @@ pipeline {
         }
         stage('build'){
             steps{
-                sh 'mvn clean package'
+                sh " mvn ${params.MAVEN-GOALS} "
                 archiveArtifacts artifacts: '**/spring-petclinic-*.jar'
                 junit testResults: '**/TEST-*.xml'
             }
