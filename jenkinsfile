@@ -12,13 +12,13 @@ pipeline {
     
 
     stages {
-        stage( 'git' ){
+        stage( 'git' ) {
             steps{
                 git url :' https://github.com/dhille98/spring-petclinic.git ',
                   branch: 'dev'
             }
         }
-        stage('build'){
+        stage('build') {
             steps{
                 sh " mvn ${params.MAVEN-GOALS} "
                 archiveArtifacts artifacts: '**/spring-petclinic-*.jar'
