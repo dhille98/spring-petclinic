@@ -23,7 +23,7 @@ pipeline{
         stage('sonar-QUBE') {
             steps {
                 withSonarQubeEnv(credentialsId: 'sonar-id', installationName: 'sonar_cloud') { // You can override the credential to be used
-                sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398::sonar -D sonar.organization=dhill98 -D sonar.projectKey=ff992256fbd2c8e78b1caffac16f35878dae84f7'}
+                sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398::sonar -D sonar.organization=dhill98 -D sonar.projectKey=dhille1998'}
 
             }
         }
