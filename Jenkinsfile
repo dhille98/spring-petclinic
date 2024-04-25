@@ -13,17 +13,17 @@ pipeline{
                   branch: 'pod'
             }
         }
-        stage('build') {
-            steps {
-                sh "mvn clean package"
-                archiveArtifacts artifacts: '**/spring-petclinic-*.jar'
-                junit testResults: '**/TEST-*.xml'
-            }  
-        }
+         stage('build') {
+             steps {
+                 sh "mvn clean package"
+                 archiveArtifacts artifacts: '**/spring-petclinic-*.jar'
+                 junit testResults: '**/TEST-*.xml'
+             }  
+         }
         stage('sonar-QUBE') {
             steps {
                 withSonarQubeEnv(credentialsId: 'sonar-id', installationName: 'sonar_cloud') { // You can override the credential to be used
-                sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398::sonar -D sonar.organization=dhill1998 -D sonar.projectKey=dhille1998'}
+                sh 'mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=dhille1998 -Dsonar.projectKey=dhille1998-spring-pet'}
 
             }
         }
