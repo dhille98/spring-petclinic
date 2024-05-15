@@ -1,9 +1,9 @@
 pipeline {
     agent { label 'JDK-17'}
 
-    triggers {
+   
         triggers { pollSCM('* * * * *') }
-    }
+    
     stages{
         stage('git'){
             steps{
