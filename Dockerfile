@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:11-jre-slim
+FROM maven:3-amazoncorretto-17
 
 # Set the working directory in the container
 WORKDIR /app

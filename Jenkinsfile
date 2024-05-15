@@ -2,7 +2,13 @@ pipeline {
     agent { label 'JDK-17'}
 
    
-        triggers { pollSCM('* * * * *') }
+    triggers { pollSCM('* * * * *') }
+
+environment {
+        DOCKERHUB_CREDENTIALS = 'dockerhub' // Replace with your credentials ID
+        DOCKERHUB_REPO = 'dhillevajja/jenkins' // Replace with your Docker Hub repository
+        IMAGE_TAG = "${env.BUILD_NUMBER}" // or use a specific tag like BUILD_NUMBER or COMMIT_SHA
+        }
     
     stages{
         stage('git'){
@@ -26,6 +32,15 @@ pipeline {
                 withSonarQubeEnv(credentialsId: 'sonar-cloud', installationName: 'sonar-cloud') { // You can override the credential to be used
                 sh 'mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=dhille98 -Dsonar.projectKey=dhille98-spring-pet'}
 
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    echo "Building Docker image..."
+                    sh 'docker build -t $DOCKERHUB_REPO:$IMAGE_TAG .'
+                }
             }
         }
     }
