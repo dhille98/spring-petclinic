@@ -24,14 +24,20 @@ pipeline{
              }  
          }
 
-        // stage(copyfile){
-        //     steps{
-        //         script {
-        //             // Access the uploaded file
-        //             sh 'cp $settings.xml /home'
-        //         }
-        //     }
-        // }
+        stage(copyfile){
+            steps{
+                script {
+                    // Access the uploaded file
+                    sh 'cp $settings.xml /var/lib/jenkins/.m2/settings.xml'
+                }
+            }
+        }
+        stage(deploythe-artifacts-jforg){
+            steps{
+                sh 'mvn clean deploy -Dskiptest'
+                }
+            }
+        }
         
 
     }
