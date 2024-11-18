@@ -33,7 +33,7 @@ pipeline{
                 }
             }
         }
-        stage(deploythe-artifacts-jforg){
+        stage('deploythe-artifacts-jforg'){
             steps{
                 sh 'mvn clean deploy -Dskiptest'
             }
