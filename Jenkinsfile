@@ -60,6 +60,14 @@ pipeline{
 				jf 'rt build-publish'
 			}
 		}
+        stage(trivyscan){
+            steps {
+                        sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
+                        sh 'mkdir -p reports && rm -rf reports/dev_trivy_report.html' 
+                        sh """sudo trivy image sreeharshav/devopsb40spring:$BUILD_NUMBER --security-checks vuln --exit-code 0 --severity CRITICAL --timeout 15m --format template --template \"@html.tpl\" --output reports/dev_trivy_report.html  """
+                        //sh 'aws s3 cp reports/dev_trivy_report.html s3://sreeterraformbucket/dev_trivy_report.html'
+                    }
+        }
     }
         
  }
