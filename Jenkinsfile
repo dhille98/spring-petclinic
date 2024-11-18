@@ -9,7 +9,7 @@ pipeline{
 
     environment {
         MAVEN_SETTINGS_CRED_ID = 'maven-settings-file'  // Replace with your credential ID
-        DOCKER_IMAGE_NAME = "dhilli.jfrog.io/spc-jenkins-docker/spc:1.0"
+        DOCKER_IMAGE_NAME = "dhilli.jfrog.io/spc-jenkins-docker/spc:${env.BUILD_ID}"
     }
     
     
@@ -55,6 +55,11 @@ pipeline{
                 jf 'docker push $DOCKER_IMAGE_NAME'
             }
         }
+        stage('Publish build info') {
+			steps {
+				jf 'rt build-publish'
+			}
+		}
     }
         
  }
