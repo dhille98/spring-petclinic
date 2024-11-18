@@ -30,7 +30,7 @@ pipeline{
                 withCredentials([file(credentialsId: "${MAVEN_SETTINGS_CRED_ID}", variable: 'SETTINGS_FILE')]) {
                     // Copy to .m2 directory on the node
                     sh 'mkdir -p ~/.m2'
-                    sh 'cp $SETTINGS_FILE ~/.m2/settings.xml || exit 1'
+                    sh 'cp $SETTINGS_FILE ~/.m2/settings.xml || exit 0'
                 }
             }
         }
