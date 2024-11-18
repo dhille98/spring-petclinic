@@ -36,6 +36,13 @@
     <spring-format.version>0.0.40</spring-format.version>
 
   </properties>
+  <distributionManagement>
+    <snapshotRepository>
+        <id>snapshots</id>
+        <name>a0hzr40h0rlqq-artifactory-primary-0-snapshots</name>
+        <url>https://dhilli.jfrog.io/artifactory/jenkins-libs-snapshot-local</url>
+    </snapshotRepository>
+</distributionManagement>
 
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->

@@ -1,8 +1,11 @@
 pipeline{
-    agent { label 'JDK-17'}
+    agent any
     triggers {
         pollSCM('* * * * *')
         
+    }
+    parameters {
+        file(name: 'settings.xml')
     }
     
     
@@ -20,13 +23,16 @@ pipeline{
                  junit testResults: '**/TEST-*.xml'
              }  
          }
-        stage('sonar-QUBE') {
-            steps {
-                withSonarQubeEnv(credentialsId: 'sonar-id', installationName: 'sonar_cloud') { // You can override the credential to be used
-                sh 'mvn clean package sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=dhille1998 -Dsonar.projectKey=dhille1998-spring-pet'}
 
-            }
-        }
+        // stage(copyfile){
+        //     steps{
+        //         script {
+        //             // Access the uploaded file
+        //             sh 'cp $settings.xml /home'
+        //         }
+        //     }
+        // }
+        
 
     }
 }
