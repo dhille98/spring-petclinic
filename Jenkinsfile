@@ -46,9 +46,9 @@ pipeline{
         }
         stage('scanandpush'){
             steps{
-                # scan the docker image
+               // scan the docker image
                 jf 'docker scan $DOCKER_IMAGE_NAME'
-                # push the docker image
+                // push the docker image
                 jf 'docker push $DOCKER_IMAGE_NAME'
             }
         }
