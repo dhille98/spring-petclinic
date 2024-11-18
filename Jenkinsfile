@@ -3,6 +3,9 @@ pipeline{
     triggers {
         pollSCM('* * * * *') // Polls every 15 minutes
     }
+    tools {
+		jfrog 'jfrog-cli'
+	}
 
     environment {
         MAVEN_SETTINGS_CRED_ID = 'maven-settings-file'  // Replace with your credential ID
