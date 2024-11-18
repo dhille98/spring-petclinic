@@ -1,5 +1,9 @@
 pipeline{
     agent any
+    triggers {
+        pollSCM('* * * * *') // Polls every 15 minutes
+    }
+
     environment {
         MAVEN_SETTINGS_CRED_ID = 'maven-settings-file'  // Replace with your credential ID
     }
@@ -28,6 +32,7 @@ pipeline{
                     sh 'cp $SETTINGS_FILE ~/.m2/settings.xml'
                 }
             }
+        }
         // stage(deploythe-artifacts-jforg){
         //     steps{
         //         sh 'mvn clean deploy -Dskiptest'
@@ -36,3 +41,4 @@ pipeline{
     }
         
  }
+
