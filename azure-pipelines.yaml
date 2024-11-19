@@ -1,0 +1,90 @@
+---
+  trigger:
+    - dev
+  pool:
+    name: default
+  
+  variables:
+    dockerImageName: 'spc-az'
+    jfrogRegistry: 'dhilli.jfrog.io'
+    jfrogRepo: 'docker-hub-docker-local'
+  #   DOCKER_TAG: '$(Build.BuildId)'
+  # dhilli.jfrog.io/docker-hub-docker-local/<DOCKER_IMAGE>
+  # docker pull dhilli.jfrog.io/docker-hub-docker-local/<DOCKER_IMAGE>:<DOCKER_TAG>
+  stages:
+    - stage: mavenbuild
+      displayName: 
+      jobs:
+        - job: build 
+          steps:
+            - task: Maven@4
+              inputs:
+                mavenPOMFile: 'pom.xml'
+                goals: 'package'
+                publishJUnitResults: true
+                testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            - task: CopyFiles@2
+              inputs:
+                contents: '**/target/*.jar'
+                targetFolder: $(Build.ArtifactStagingDirectory)
+            - task: PublishBuildArtifacts@1
+              inputs:
+                pathToPublish: $(Build.ArtifactStagingDirectory)
+                artifactName: MyBuildOutputs
+            - script: ls -al && pwd && rm -rf /home/adminsree/.m2/settings.xml
+              displayName: 'List Files & Current Working Directory'
+            - task: DownloadSecureFile@1
+              inputs:
+                secureFile: 'settings.xml'
+            - task: CopyFiles@2
+              inputs:
+                SourceFolder: '$(Agent.TempDirectory)'
+                Contents: '**'
+                TargetFolder: '/home/adminsree/.m2'
+            # - script: mvn deploy -Dskiptest
+            #   displayName: 'Run the maven build and install'
+            - script: mvn deploy -Dskiptest
+              displayName: 'Run the maven deploy to JFrog Artifactory'
+  
+    - stage: dockerBuildPush
+      jobs:
+        - job:
+          steps:
+            - task: Docker@2
+              displayName: 'Login to JFrog Artifactory'
+              inputs:
+                containerRegistry: 'jfrog-service-connection'  # Use the name of your service connection
+                command: 'login'
+            
+            - task: Docker@2
+              displayName: 'Build Docker image'
+              inputs:
+                command: 'build'
+                Dockerfile: 'Dockerfile'
+                repository: '$(jfrogRepo)/$(dockerImageName)'
+                tags: '$(Build.BuildId)'
+            # - script: mkdir -p reports && rm -rf reports/dev_trivy_report.json
+            #   displayName: check the file exit or not
+            # - script: trivy image $(jfrogRegistry)/$(jfrogRepo)/$(dockerImageName):$(Build.BuildId) --format json --output trivy-report.json
+            #   displayName: "Generate Trivy Report (JSON)"
+            # - script: |
+            #     npx trivy-to-html trivy-report.json -o trivy-report.html
+            #   displayName: "Convert Trivy Report to HTML"
+            
+            # - task: PublishPipelineArtifact@1
+            #   inputs:
+            #     targetPath: 'trivy-report.json'
+            #     artifactName: 'TrivyReport'
+            #     publishLocation: 'pipeline'
+            #   displayName: "Publish Trivy Report as Pipeline Artifact"
+  
+            
+            - task: Docker@2
+              displayName: 'Push Docker image to JFrog Artifactory'
+              inputs:
+                repository: '$(jfrogRepo)/$(dockerImageName)'
+                command: 'push'
+                tags: '$(Build.BuildId)'
+         
+                  
+           
