@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/dev
 # Stage 1: Build the Spring Boot application
 FROM maven:3.9.9-amazoncorretto-17 AS build
 
