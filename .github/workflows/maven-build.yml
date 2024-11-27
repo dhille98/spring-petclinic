@@ -27,4 +27,13 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: maven application build
-        run: mvn clean package 
+        run: mvn clean package
+  scan: 
+    runs-on: [self-hosted]
+
+    steps:
+      - name: Official SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
