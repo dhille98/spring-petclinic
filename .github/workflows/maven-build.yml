@@ -5,14 +5,15 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - dev
   pull_request:
     branches: [ main ]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         java: [ '17' ]
@@ -25,5 +26,5 @@ jobs:
           java-version: ${{matrix.java}}
           distribution: 'adopt'
           cache: maven
-      - name: Build with Maven Wrapper
-        run: ./mvnw -B package
+      - name: maven application build
+        run: mvn clean package 
