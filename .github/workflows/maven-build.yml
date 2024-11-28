@@ -30,7 +30,8 @@ jobs:
         run: mvn clean package
   scan: 
     runs-on: ubuntu-latest
-    if: success()
+    needs: build
+    # if: success()
 
     steps:
       - name: Official SonarQube Scan
