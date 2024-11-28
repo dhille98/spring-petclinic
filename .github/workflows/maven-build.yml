@@ -13,7 +13,7 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '17' ]
@@ -29,7 +29,8 @@ jobs:
       - name: maven application build
         run: mvn clean package
   scan: 
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
+    if: success()
 
     steps:
       - name: Official SonarQube Scan
@@ -37,6 +38,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} 
-          SONAR_PROJECT_KEY: "dhille98_spring-petclinic"
-          SONAR_ORGANIZATION: "dhille98"
+        with:
+          args: >
+            -Dsonar.organization=dhille98
+            -Dsonar.projectKey=dhille98_spring-petclinic
       
