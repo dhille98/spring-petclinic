@@ -28,6 +28,11 @@ jobs:
           cache: maven
       - name: maven application build
         run: mvn clean package
+      - name: upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: **/*.jar 
   scan: 
     runs-on: ubuntu-latest
     needs: build
