@@ -54,7 +54,7 @@ jobs:
             # Step 7: Run Trivy Scan and Generate HTML Report
             - name: Run Trivy Scan
               run: |
-                trivy image --severity HIGH,CRITICAL --format template --template @trivy-html.tpl --output trivy-report.html spc:${{ github.run_number }} --exit-code 1
+                trivy image --severity HIGH,CRITICAL --format template --template @trivy-html.tpl --output trivy-report.html spc:${{ github.run_number }}
                 trivy image --severity HIGH,CRITICAL --format json --output trivy-report.json spc:${{ github.run_number }} --exit-code 1
             
             # Step 8: Upload HTML Report as an Artifact
