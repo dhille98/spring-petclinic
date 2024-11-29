@@ -43,7 +43,8 @@ jobs:
             # Step 5: Install Trivy
             - name: Install Trivy
               run: |
-                curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/scripts/install.sh | sh
+                wget https://github.com/aquasecurity/trivy/releases/download/v0.20.2/trivy_0.20.2_Linux-64bit.deb
+                sudo dpkg -i trivy_0.20.2_Linux-64bit.deb
             
             # Step 6: Download HTML Template
             - name: Download HTML Template
