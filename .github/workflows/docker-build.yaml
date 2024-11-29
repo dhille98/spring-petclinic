@@ -40,22 +40,27 @@ jobs:
             #   with:
             #       name: trivy-results
             #       path: trivy-results.json
-            # Step 5: Install Trivy and HTML Template
-            - name: Install Trivy and Download HTML Template
+            # Step 5: Install Trivy
+            - name: Install Trivy
               run: |
-                  curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
-  
-           # Step 6: Run Trivy Scan and Generate HTML Report
+                curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/scripts/install.sh | sh
+            
+            # Step 6: Download HTML Template
+            - name: Download HTML Template
+              run: |
+                curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
+            
+            # Step 7: Run Trivy Scan and Generate HTML Report
             - name: Run Trivy Scan
               run: |
                 trivy image --format template --template @trivy-html.tpl --output trivy-report.html spc:3
-       
-           # Step 7: Upload HTML Report as an Artifact
+            
+            # Step 8: Upload HTML Report as an Artifact
             - name: Upload Trivy HTML Report
               uses: actions/upload-artifact@v3
               with:
-                 name: trivy-html-report
-                 path: trivy-report.html
+                name: trivy-html-report
+                path: trivy-report.html
 
 
 
