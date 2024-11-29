@@ -32,8 +32,14 @@ jobs:
               with:
                 image-ref: spc:${{ github.run_number }}
                 scan-type: image
-                format: 'table'
-                output: trivy.json
+                format: 'json'
+                output: trivy-results.json
+                severity: 'HIGH,CRITICAL'
+            - name: Upload Trivy Results
+              uses: actions/upload-artifact@v3
+              with:
+                  name: trivy-results
+                  path: trivy-results.json
 
 
 
