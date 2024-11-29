@@ -19,55 +19,58 @@ jobs:
               run: |
                 docker image build -t spc:${{ github.run_number }} .
                 docker images ls
-            # - name: Cache Trivy Database
-            #   uses: actions/cache@v4
-            #   with:
-            #     path: ~/.cache/trivy
-            #     key: trivy-db-${{ runner.os }}-${{ hashFiles('**/Dockerfile') }}
-            #     restore-keys: |
-            #       trivy-db-${{ runner.os }}-
+            - name: Cache Trivy Database
+              uses: actions/cache@v4
+              with:
+                path: ~/.cache/trivy
+                key: trivy-db-${{ runner.os }}-${{ hashFiles('**/Dockerfile') }}
+                restore-keys: |
+                  trivy-db-${{ runner.os }}-
                 
-            # - name: Run Trivy vulnerability scanner
-            #   uses: aquasecurity/trivy-action@0.28.0
-            #   with:
-            #     image-ref: spc:${{ github.run_number }}
-            #     scan-type: image
-            #     format: 'json'
-            #     output: trivy-results.json
-            #     severity: 'HIGH,CRITICAL'
-            # - name: Upload Trivy Results
-            #   uses: actions/upload-artifact@v3
-            #   with:
-            #       name: trivy-results
-            #       path: trivy-results.json
-            # Step 5: Install Trivy
-            - name: Install Trivy
-              run: |
-                wget https://github.com/aquasecurity/trivy/releases/download/v0.20.2/trivy_0.20.2_Linux-64bit.deb
-                sudo dpkg -i trivy_0.20.2_Linux-64bit.deb
-            
-            # Step 6: Download HTML Template
-            - name: Download HTML Template
-              run: |
-                curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
-            
-            # Step 7: Run Trivy Scan and Generate HTML Report
-            - name: Run Trivy Scan
-              run: |
-                trivy image --severity HIGH,CRITICAL --format template --template @trivy-html.tpl --output trivy-report.html spc:${{ github.run_number }}
-                trivy image --severity HIGH,CRITICAL --format json --output trivy-report.json spc:${{ github.run_number }} --exit-code 1
-            
-            # Step 8: Upload HTML Report as an Artifact
-            - name: Upload Trivy HTML Report
-              uses: actions/upload-artifact@v4
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@0.28.0
               with:
-                name: trivy-html-report
-                path: trivy-report.html
-            - name: Upload Trivy json Report
-              uses: actions/upload-artifact@v4
+                image-ref: spc:${{ github.run_number }}
+                scan-type: image
+                format: 'json'
+                output: trivy-results.json
+                severity: 'HIGH,CRITICAL'
+                exit-code: '1'
+                vuln-type: 'os,library'
+
+            - name: Upload Trivy Results
+              uses: actions/upload-artifact@v3
               with:
-                  name: trivy-json-report
-                  path: trivy-report.json
+                  name: trivy-results
+                  path: trivy-results.json
+            # # Step 5: Install Trivy
+            # - name: Install Trivy
+            #   run: |
+            #     wget https://github.com/aquasecurity/trivy/releases/download/v0.20.2/trivy_0.20.2_Linux-64bit.deb
+            #     sudo dpkg -i trivy_0.20.2_Linux-64bit.deb
+            
+            # # Step 6: Download HTML Template
+            # - name: Download HTML Template
+            #   run: |
+            #     curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
+            
+            # # Step 7: Run Trivy Scan and Generate HTML Report
+            # - name: Run Trivy Scan
+            #   run: |
+            #     trivy image --severity HIGH,CRITICAL --format template --template @trivy-html.tpl --output trivy-report.html spc:${{ github.run_number }}
+            #     trivy image --severity HIGH,CRITICAL --format json --output trivy-report.json spc:${{ github.run_number }} --exit-code 1
+            
+            # # Step 8: Upload HTML Report as an Artifact
+            # - name: Upload Trivy HTML Report
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #     name: trivy-html-report
+            #     path: trivy-report.html
+            # - name: Upload Trivy json Report
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #       name: trivy-json-report
+            #       path: trivy-report.json
 
 
 
