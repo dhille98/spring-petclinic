@@ -24,9 +24,9 @@ jobs:
               with:
                 image-ref: spc:${{ github.run_number }}
                 scan-type: image
-                format: 'github'
+                format: 'table'
                 output: trivy.json
-                
+
 
 
 
