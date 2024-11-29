@@ -27,19 +27,35 @@ jobs:
                 restore-keys: |
                   trivy-db-${{ runner.os }}-
                 
-            - name: Run Trivy vulnerability scanner
-              uses: aquasecurity/trivy-action@0.28.0
-              with:
-                image-ref: spc:${{ github.run_number }}
-                scan-type: image
-                format: 'json'
-                output: trivy-results.json
-                severity: 'HIGH,CRITICAL'
-            - name: Upload Trivy Results
+            # - name: Run Trivy vulnerability scanner
+            #   uses: aquasecurity/trivy-action@0.28.0
+            #   with:
+            #     image-ref: spc:${{ github.run_number }}
+            #     scan-type: image
+            #     format: 'json'
+            #     output: trivy-results.json
+            #     severity: 'HIGH,CRITICAL'
+            # - name: Upload Trivy Results
+            #   uses: actions/upload-artifact@v3
+            #   with:
+            #       name: trivy-results
+            #       path: trivy-results.json
+            # Step 5: Install Trivy and HTML Template
+            - name: Install Trivy and Download HTML Template
+              run: |
+                  curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -o trivy-html.tpl
+  
+           # Step 6: Run Trivy Scan and Generate HTML Report
+            - name: Run Trivy Scan
+              run: |
+                trivy image --format template --template @trivy-html.tpl --output trivy-report.html spc:3
+       
+           # Step 7: Upload HTML Report as an Artifact
+            - name: Upload Trivy HTML Report
               uses: actions/upload-artifact@v3
               with:
-                  name: trivy-results
-                  path: trivy-results.json
+                 name: trivy-html-report
+                 path: trivy-report.html
 
 
 
