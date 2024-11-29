@@ -17,9 +17,17 @@ jobs:
               uses: docker/setup-buildx-action@v3
             - name: docker image build
               run: |
-                docker image build -t spc:${{ github.run_id }} .
+                docker image build -t spc:${{ github.run_number }} .
                 docker images ls
-                docker container run -d -P spc:${{ github.run_id }}
-                docker ps -a
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@0.28.0
+              with:
+                image-ref: spc:${{ github.run_number }}
+                scan-type: image
+                format: 'github'
+                output: trivy.json
+                
+
+
 
 
