@@ -1,28 +1,24 @@
-
-# Stage 1: Build the Spring Boot application
+# Stage 1: Build environment
 FROM maven:3.9.9-amazoncorretto-17 AS build
-
-# Set the working directory
 WORKDIR /app
 
-# Copy the pom.xml and install dependencies
+# Copy the pom.xml and download dependencies
 COPY pom.xml .
-COPY src ./src
+RUN mvn dependency:go-offline
 
-# Package the application
+# Copy the source code and build the application
+COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final image
-FROM openjdk:17-jdk-alpine
-
-# Set the working directory in the final image
+# Stage 2: Runtime environment
+FROM amazoncorretto:17-alpine-jdk AS runtime
 WORKDIR /app
 
-# Copy the jar file from the build stage to the final image
-COPY --from=build /app/target/*.jar ./my-spring-boot-app.jar
+# Copy the built JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose the port the Spring Boot app will run on
+# Expose the application port
 EXPOSE 8080
 
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "/app/my-spring-boot-app.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
