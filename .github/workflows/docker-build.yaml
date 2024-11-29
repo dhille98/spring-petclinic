@@ -16,5 +16,10 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
             - name: docker image build
-              run: docker image build -t spc:1.0 .
-              
+              run: |
+                docker image build -t spc:${{ github.run_id }} .
+                docker images ls
+                docker container run -d -P spc:${{ github.run_id }}
+                docker ps -a
+
+
